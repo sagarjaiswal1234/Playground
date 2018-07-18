@@ -6,12 +6,12 @@ import java.util.Arrays;
 public class SuffixTree {
 
 	static String[] suffixes;
-	
+	//predecessor of tree
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-	String text="babca";
+	String text="babcaba";
 	String pattern="ba";
 	
 	createSuffixes(text);
@@ -34,15 +34,13 @@ public class SuffixTree {
 			matched.add(insertionPoint);
 		}	
 		
-		
-		
 		int startOfSubset=(-insertionPoint)-1;
 		
 		if (subsetSuffixes.length<=1) {
 			return matched;
 		}
 		
-		if (insertionPoint<0 && suffixes[startOfSubset].startsWith(pattern)) {
+		if (insertionPoint<0 && suffixes[startOfSubset].startsWith(pattern)) {//start
 			matched.add(startOfSubset);
 		}
 		
@@ -78,7 +76,7 @@ public class SuffixTree {
 		
 		//if negative means String not present
 		//insertion point gives point where the searched element could be inserted
-		insertionPoint=(-insertionPoint)-1;//-1 since index starts from 0 for positive
+		insertionPoint=(-insertionPoint)-1;//-1 since index starts from 0 for positive and -1 for negative
 		
 		//start searching after insertion point
 		if (suffixes[insertionPoint].startsWith(pattern)) {

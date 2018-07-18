@@ -6,11 +6,49 @@ public class Runner {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String text = "abcabcccabcjklj";
-		String pattern = "ab";
-		ArrayList<Integer> indices = kmp(text, pattern);
-		System.out.println(indices);
+		String text = "abc";
+		printAllPermuations(text);
+		printCombinations(text);
+	
+		
+	}
 
+	private static void printCombinations(String text) {
+		// TODO Auto-generated method stub
+		
+		
+	}
+
+	private static void printAllPermuations(String text) {
+		// TODO Auto-generated method stub
+		permute(text.toCharArray(),0,text.length()-1);
+		
+	}
+
+	private static void permute(char[] text , int startIndex, int endIndex) {
+		// TODO Auto-generated method stub
+		
+		if (startIndex==endIndex) {
+			System.out.println(new String(text) );
+			return;
+		}
+			
+		for (int i = startIndex; i <= endIndex; i++) {
+			
+			swap(text ,startIndex,i);
+			permute(text , startIndex+1, endIndex);
+			swap(text ,startIndex,i);
+		}
+		
+		
+	}
+
+	private static void swap(char[] text, int i, int j) {
+		// TODO Auto-generated method stub
+		char temp=text[i];
+		text[i]=text[j];
+		text[j]=temp;
+		
 	}
 
 	private static ArrayList<Integer> kmp(String inputText, String patternToBeSearched) {
