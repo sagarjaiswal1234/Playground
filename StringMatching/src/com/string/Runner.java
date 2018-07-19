@@ -6,84 +6,114 @@ public class Runner {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String text = "abc";
-		printAllPermuations(text);
-		printCombinations(text);
-	
-		
+		String text = "kaakbc";
+
+		removeAdjascentPairs(text);
+	}
+
+	private static void removeAdjascentPairs(String t) {
+		// TODO Auto-generated method stub
+		char[] text = t.toCharArray();
+		StringBuffer sb = new StringBuffer(t);
+
+		int prev = 0;
+		for (int current = 1; current < text.length;) {
+
+			while (prev >= 0 && current < text.length && text[prev] == text[current]) {
+				sb.delete(prev, current);
+				prev--;
+				current++;
+			}
+			prev++;
+			current++;
+		}
+		System.out.println(sb);
+
 	}
 
 	private static void printCombinations(String text) {
 		// TODO Auto-generated method stub
-		
-		
+		combine(text, new StringBuffer(""), 0);
+
+	}
+
+	private static void combine(String text, StringBuffer fixedOutput, int startOfRemainigCombination) {
+		// TODO Auto-generated method stub
+		// Issue when text has repeated charter
+		for (int i = startOfRemainigCombination; i < text.length(); i++) {
+			fixedOutput = fixedOutput.append(text.charAt(i));
+			System.out.println(fixedOutput);
+			combine(text, fixedOutput, i + 1);
+			fixedOutput.deleteCharAt(fixedOutput.length() - 1);
+
+		}
+
 	}
 
 	private static void printAllPermuations(String text) {
 		// TODO Auto-generated method stub
-		permute(text.toCharArray(),0,text.length()-1);
-		
+		permute(text.toCharArray(), 0, text.length() - 1);
+
 	}
 
-	private static void permute(char[] text , int startIndex, int endIndex) {
+	private static void permute(char[] text, int startIndex, int endIndex) {
 		// TODO Auto-generated method stub
-		
-		if (startIndex==endIndex) {
-			System.out.println(new String(text) );
+
+		if (startIndex == endIndex) {
+			System.out.println(new String(text));
 			return;
 		}
-			
+
 		for (int i = startIndex; i <= endIndex; i++) {
-			
-			swap(text ,startIndex,i);
-			permute(text , startIndex+1, endIndex);
-			swap(text ,startIndex,i);
+
+			swap(text, startIndex, i);
+			permute(text, startIndex + 1, endIndex);
+			swap(text, startIndex, i);
 		}
-		
-		
+
 	}
 
 	private static void swap(char[] text, int i, int j) {
 		// TODO Auto-generated method stub
-		char temp=text[i];
-		text[i]=text[j];
-		text[j]=temp;
-		
+		char temp = text[i];
+		text[i] = text[j];
+		text[j] = temp;
+
 	}
 
 	private static ArrayList<Integer> kmp(String inputText, String patternToBeSearched) {
-		
-		ArrayList<Integer> result=new ArrayList<>();
+
+		ArrayList<Integer> result = new ArrayList<>();
 		char[] text = inputText.toCharArray();
 		char[] pattern = patternToBeSearched.toCharArray();
 		int[] prefixTable = getPrefixTable(patternToBeSearched);
-		
-		
-		int patternIterator=0;
+
+		int patternIterator = 0;
 		for (int textIterator = 0; textIterator < text.length; /* no update statement */) {
 
-			if (text[textIterator]==pattern[patternIterator]) {
+			if (text[textIterator] == pattern[patternIterator]) {
 				textIterator++;
 				patternIterator++;
-				if (patternIterator==pattern.length) {
-					result.add(textIterator-patternIterator);//since textiterator has already moved 1 extra //abab p=ab
-					patternIterator=prefixTable[patternIterator-1];//aaaaaa p=aaa
+				if (patternIterator == pattern.length) {
+					result.add(textIterator - patternIterator);// since textiterator has already moved 1 extra //abab
+																// p=ab
+					patternIterator = prefixTable[patternIterator - 1];// aaaaaa p=aaa
 				}
-			}else {
-				
-				if (patternIterator==0) {
+			} else {
+
+				if (patternIterator == 0) {
 					textIterator++;
-					//patternIterator continues to be 0
-				}else {
-					patternIterator=prefixTable[patternIterator-1];//patternIterator will be at index from where we need to begin matching with current text[textIIterator]
+					// patternIterator continues to be 0
+				} else {
+					patternIterator = prefixTable[patternIterator - 1];// patternIterator will be at index from where we
+																		// need to begin matching with current
+																		// text[textIIterator]
 				}
-				
+
 			}
-			
+
 		}
 
-		
-		
 		return result;
 	}
 
