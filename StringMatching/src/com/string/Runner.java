@@ -1,14 +1,95 @@
 package com.string;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Runner {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String text = "kaakbc";
+		String text = "bajbgccccggbggggb";
+		String pattern = "bc";
 
-		removeAdjascentPairs(text);
+		int min = minimumWindowSubstring(text, pattern);
+		System.out.println(min);
+
+	}
+
+	private static int minimumWindowSubstring(String text, String pattern) {
+		// TODO Auto-generated method stub
+
+		int lengthMatched = 0;
+		int startOfWindow = 0;
+		int minimumWindowLength = 100;
+
+		if (pattern.length() > text.length()) {
+			return -1;
+		}
+		HashMap<Character, Integer> matchedCharMap = new HashMap<>();
+		HashMap<Character, Integer> patternMap = new HashMap<>();
+
+		for (int i = 0; i < pattern.length(); i++) {
+			Character patternChar = pattern.charAt(i);
+			int countOfChar = patternMap.getOrDefault(patternChar, 0);
+			countOfChar++;
+			patternMap.put(patternChar, countOfChar);
+		}
+
+		for (int i = 0; i < text.length(); i++) {
+
+			Character textChar = text.charAt(i);
+
+			if (patternMap.containsKey(textChar)) {
+
+				int countOfChar = matchedCharMap.getOrDefault(textChar, 0);
+				countOfChar++;
+				matchedCharMap.put(textChar, countOfChar);
+
+				if (countOfChar <= patternMap.getOrDefault(textChar, -1)) {
+					lengthMatched++;
+				}
+
+				if (lengthMatched == pattern.length()) {//shifting startWindow
+
+					Character charAtIndex = text.charAt(startOfWindow);
+
+					while (patternMap.containsKey(charAtIndex)
+							&&	matchedCharMap.get(charAtIndex).intValue() > patternMap.get(charAtIndex)) 
+					{
+						decrementCountInMap(matchedCharMap,charAtIndex);
+						startOfWindow++;
+						
+						//remove chars not present in pattern
+						charAtIndex = text.charAt(startOfWindow);
+						while (startOfWindow<i && patternMap.get(text.charAt(startOfWindow))==null) {
+							startOfWindow++;
+						}
+					}
+
+					int effeciveLength = i - startOfWindow + 1;
+					if (effeciveLength < minimumWindowLength) {
+						minimumWindowLength = effeciveLength;
+						if (effeciveLength==pattern.length()) {
+							return effeciveLength;
+						}
+					}
+
+				}
+
+			}
+
+		}
+
+		return minimumWindowLength;
+	}
+
+	private static void decrementCountInMap(HashMap<Character, Integer> matchedCharMap, Character key) {
+		// TODO Auto-generated method stub
+		Integer count=matchedCharMap.get(key);
+		if (count==null) {
+			return;
+		}
+		matchedCharMap.put(key, --count);
 	}
 
 	private static void removeAdjascentPairs(String t) {
