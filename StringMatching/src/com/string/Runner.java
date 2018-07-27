@@ -8,11 +8,84 @@ public class Runner {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String text = "bajbgccccggbggggb";
-		String pattern = "bc";
+		String pattern = "ack";
 
-		int min = minimumWindowSubstring(text, pattern);
-		System.out.println(min);
+		wildCardMatch(text,pattern);
+		
+	}
 
+	private static void wildCardMatch(String text, String pattern) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void findPatternIn2DArray(char[][] text, String pattern) {
+		// TODO Auto-generated method stub
+		
+		/*char text1 [][]= { 	{'a','b','c'},
+				{'b','c','d'},
+				{'h','i','j'}
+			};*/
+		
+		for (int i = 0; i < text.length; i++) {
+			
+			for (int j = 0; j < text[i].length; j++) {
+				
+				System.out.println(i+" "+j);
+				boolean found=searchPattern(text, pattern, i,j);
+				if (found==true) {
+					System.out.println("found pattern at index "+i+j);
+					return;
+				}
+				
+			}
+			
+		}
+		System.out.println("Pattern not found");
+		
+	}
+
+	private static boolean searchPattern(char[][] text, String pattern, int seedx,int seedy) {
+		// TODO Auto-generated method stub
+		
+		int seedX=seedx;
+		int seedY=seedy;
+		if (pattern.charAt(0)!=text[seedX][seedY]) {
+			return false;
+		}
+		
+		int[] x= {-1,-1,0,1,1,1,0,-1};
+		int[] y= {0,1,1,1,0,-1,-1,-1};
+		
+		for (int direction = 0; direction < y.length; direction++) {
+			
+			int currentX=seedX+x[direction];
+			int currentY=seedY+y[direction];
+			int patternIndex=0;
+			for (patternIndex = 1; patternIndex < pattern.length(); patternIndex++) {
+				
+				
+				if (currentX<0 || currentX>text.length-1 ||
+						currentY<0 || currentY>text[0].length-1) {
+						break;
+				}
+				
+				if (text[currentX][currentY]!=pattern.charAt(patternIndex)) {
+					break;
+				}
+				
+				currentX=currentX+x[direction];
+				currentY=currentY+x[direction];
+				
+			}
+			
+			if (patternIndex==pattern.length()) {
+				return true;
+			}
+			
+		}
+		
+		return false;
 	}
 
 	private static int minimumWindowSubstring(String text, String pattern) {
