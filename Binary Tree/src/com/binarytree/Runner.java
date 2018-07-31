@@ -1,6 +1,7 @@
 package com.binarytree;
 
 import java.util.ArrayList;
+import com.linkedlist.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,6 +9,8 @@ import java.util.Queue;
 import java.util.Stack;
 
 import javax.swing.event.PopupMenuListener;
+
+import com.linkedlist.DLLNode;
 import com.stack.*;
 
 public class Runner {
@@ -20,25 +23,68 @@ public class Runner {
 		ArrayList<Integer> result = new ArrayList<>();
 		Node root = new Node(5, null, null);
 		createBinaryTree(root);
-
-		Node head = null;
-		//head=convertBSTToDLL(root, head);
-		//head=convertBSTToDLLWithoutGlobalVariarble(root, head);
-		//head=convertBSTToCLL(root);
-
-		
-		int [] input= {1,2,3,4,5};
-		Node root1=convertArrayToBST(input,0,input.length-1);
-		
-		
+		inOrderRecursive(root);
 		
 		
 
 	}
 
+	
+	private static Node kthSmallestElement(Node root,int k ) {
+		// TODO Auto-generated method stub
+
+		Stack<Node> stack = new Stack<>();
+		Node current = root;
+		boolean done = false;
+		int count=0;
+
+		while (true) {// !done
+
+			if (current != null) {
+				stack.push(current);
+				current = current.getLeft();
+			} else {
+
+				if (stack.isEmpty()) {// also implies current is null
+					// done=true;
+					System.out.println("No of elemnts is smaller than k");
+					break;
+				}
+				current = stack.pop();
+				count++;
+				if (count==k) {
+					
+					return current;
+				}
+				//processNode(current);
+				current = current.getRight();
+			}
+		}
+		
+		
+		
+		
+		return null;
+	}
+
+
 	private static Node convertArrayToBST(int[] input, int start, int end) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		if (start>end) {
+			return null;
+		}
+		int mid=(start+end)/2;
+		Node root=new Node();
+		root.setData(input[mid]);
+		Node leftTree=convertArrayToBST(input, start, mid-1);
+		Node righttree=convertArrayToBST(input, mid+1, end);
+		
+		root.setLeft(leftTree);
+		root.setRight(righttree);
+		
+		return root;
+	
 	}
 
 	private static Node convertBSTToCLL(Node root) {
