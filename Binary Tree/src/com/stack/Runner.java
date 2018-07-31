@@ -140,7 +140,7 @@ public class Runner {
 		return result;
 	}
 
-	private static String inFixToPostFix(String infix) {
+	public static String inFixToPostFix(String infix) {
 		String postfix = "";
 		Stack stack = new Stack();
 

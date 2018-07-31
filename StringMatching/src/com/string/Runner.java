@@ -7,84 +7,121 @@ public class Runner {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String text = "bajbgccccggbggggb";
-		String pattern = "ack";
-
-		wildCardMatch(text,pattern);
 		
 	}
 
-	private static void wildCardMatch(String text, String pattern) {
+	private static void wildCardMatch(String data, String wildCardPattern) {
 		// TODO Auto-generated method stub
-		
+		char[] text = data.toCharArray();
+		char[] pattern = wildCardPattern.toCharArray();
+
+		// Ignoring consecustive ** condition
+
+		// length+1 since we are going to match "" string as well
+		// default intialized to False
+		boolean T[][] = new boolean[text.length + 1][pattern.length + 1];
+
+		// since "" matches with ""
+		T[0][0] = true;
+
+		// since "" could match with *
+		if (pattern[0] == '*') {
+			T[0][1] = true;
+		}
+
+		// remaining row and column for "" char is already false
+		// patternIndex==1 if start then it will be ignored since we are considering
+		// entire matrix is intialized with false
+		// but in above ladder we have overwriiten value with true
+		// we are starting from 1 since our actual pattern and text start with 1 index
+		// and 0 is for ""
+		for (int textIndex = 1; textIndex < T.length; textIndex++) {
+
+			for (int patternIndex = 1; patternIndex < T[0].length; patternIndex++) {
+
+				char patternChar = pattern[patternIndex - 1];
+				char textChar = text[textIndex - 1];
+
+				if (patternChar == '?' || patternChar == textChar) {
+					// ignore current char from pattern and text
+					T[textIndex][patternIndex] = T[textIndex - 1][patternIndex - 1];
+
+				} else if (patternChar == '*') {
+					boolean left = T[textIndex][patternIndex - 1];
+					boolean up = T[textIndex - 1][patternIndex];
+					T[textIndex][patternIndex] = left || up;
+				}
+
+			}
+
+		}
+
+		System.out.println("text " + data + " matches " + wildCardPattern + " " + T[text.length][pattern.length]);
 	}
 
 	private static void findPatternIn2DArray(char[][] text, String pattern) {
 		// TODO Auto-generated method stub
-		
-		/*char text1 [][]= { 	{'a','b','c'},
-				{'b','c','d'},
-				{'h','i','j'}
-			};*/
-		
+
+		/*
+		 * char text1 [][]= { {'a','b','c'}, {'b','c','d'}, {'h','i','j'} };
+		 */
+
 		for (int i = 0; i < text.length; i++) {
-			
+
 			for (int j = 0; j < text[i].length; j++) {
-				
-				System.out.println(i+" "+j);
-				boolean found=searchPattern(text, pattern, i,j);
-				if (found==true) {
-					System.out.println("found pattern at index "+i+j);
+
+				System.out.println(i + " " + j);
+				boolean found = searchPattern(text, pattern, i, j);
+				if (found == true) {
+					System.out.println("found pattern at index " + i + j);
 					return;
 				}
-				
+
 			}
-			
+
 		}
 		System.out.println("Pattern not found");
-		
+
 	}
 
-	private static boolean searchPattern(char[][] text, String pattern, int seedx,int seedy) {
+	private static boolean searchPattern(char[][] text, String pattern, int seedx, int seedy) {
 		// TODO Auto-generated method stub
-		
-		int seedX=seedx;
-		int seedY=seedy;
-		if (pattern.charAt(0)!=text[seedX][seedY]) {
+
+		int seedX = seedx;
+		int seedY = seedy;
+		if (pattern.charAt(0) != text[seedX][seedY]) {
 			return false;
 		}
-		
-		int[] x= {-1,-1,0,1,1,1,0,-1};
-		int[] y= {0,1,1,1,0,-1,-1,-1};
-		
+
+		int[] x = { -1, -1, 0, 1, 1, 1, 0, -1 };
+		int[] y = { 0, 1, 1, 1, 0, -1, -1, -1 };
+
 		for (int direction = 0; direction < y.length; direction++) {
-			
-			int currentX=seedX+x[direction];
-			int currentY=seedY+y[direction];
-			int patternIndex=0;
+
+			int currentX = seedX + x[direction];
+			int currentY = seedY + y[direction];
+			int patternIndex = 0;
 			for (patternIndex = 1; patternIndex < pattern.length(); patternIndex++) {
-				
-				
-				if (currentX<0 || currentX>text.length-1 ||
-						currentY<0 || currentY>text[0].length-1) {
-						break;
-				}
-				
-				if (text[currentX][currentY]!=pattern.charAt(patternIndex)) {
+
+				if (currentX < 0 || currentX > text.length - 1 || currentY < 0 || currentY > text[0].length - 1) {
 					break;
 				}
-				
-				currentX=currentX+x[direction];
-				currentY=currentY+x[direction];
-				
+
+				if (text[currentX][currentY] != pattern.charAt(patternIndex)) {
+					break;
+				}
+
+				currentX = currentX + x[direction];
+				currentY = currentY + x[direction];
+
 			}
-			
-			if (patternIndex==pattern.length()) {
+
+			if (patternIndex == pattern.length()) {
 				return true;
 			}
-			
+
 		}
-		
+
 		return false;
 	}
 
@@ -122,19 +159,18 @@ public class Runner {
 					lengthMatched++;
 				}
 
-				if (lengthMatched == pattern.length()) {//shifting startWindow
+				if (lengthMatched == pattern.length()) {// shifting startWindow
 
 					Character charAtIndex = text.charAt(startOfWindow);
 
 					while (patternMap.containsKey(charAtIndex)
-							&&	matchedCharMap.get(charAtIndex).intValue() > patternMap.get(charAtIndex)) 
-					{
-						decrementCountInMap(matchedCharMap,charAtIndex);
+							&& matchedCharMap.get(charAtIndex).intValue() > patternMap.get(charAtIndex)) {
+						decrementCountInMap(matchedCharMap, charAtIndex);
 						startOfWindow++;
-						
-						//remove chars not present in pattern
+
+						// remove chars not present in pattern
 						charAtIndex = text.charAt(startOfWindow);
-						while (startOfWindow<i && patternMap.get(text.charAt(startOfWindow))==null) {
+						while (startOfWindow < i && patternMap.get(text.charAt(startOfWindow)) == null) {
 							startOfWindow++;
 						}
 					}
@@ -142,7 +178,7 @@ public class Runner {
 					int effeciveLength = i - startOfWindow + 1;
 					if (effeciveLength < minimumWindowLength) {
 						minimumWindowLength = effeciveLength;
-						if (effeciveLength==pattern.length()) {
+						if (effeciveLength == pattern.length()) {
 							return effeciveLength;
 						}
 					}
@@ -158,8 +194,8 @@ public class Runner {
 
 	private static void decrementCountInMap(HashMap<Character, Integer> matchedCharMap, Character key) {
 		// TODO Auto-generated method stub
-		Integer count=matchedCharMap.get(key);
-		if (count==null) {
+		Integer count = matchedCharMap.get(key);
+		if (count == null) {
 			return;
 		}
 		matchedCharMap.put(key, --count);
@@ -185,6 +221,7 @@ public class Runner {
 
 	}
 
+		
 	private static void printCombinations(String text) {
 		// TODO Auto-generated method stub
 		combine(text, new StringBuffer(""), 0);

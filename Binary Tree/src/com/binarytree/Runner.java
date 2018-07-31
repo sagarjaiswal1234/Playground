@@ -8,26 +8,196 @@ import java.util.Queue;
 import java.util.Stack;
 
 import javax.swing.event.PopupMenuListener;
+import com.stack.*;
 
 public class Runner {
 
-	static int generateTree_unprocessedArray=0;
-	
+	static int generateTree_unprocessedArray = 0;
+	static Node convertBSTToDLL_prev = null;
+	static Node convertBSTToDLL_head = null;
+
 	public static void main(String args[]) throws CloneNotSupportedException {
 		ArrayList<Integer> result = new ArrayList<>();
 		Node root = new Node(5, null, null);
 		createBinaryTree(root);
-		addNode(root, 47);
-		addNode(root, 49);
+
+		Node head = null;
+		//head=convertBSTToDLL(root, head);
+		//head=convertBSTToDLLWithoutGlobalVariarble(root, head);
+		//head=convertBSTToCLL(root);
+
 		
-		SiblingNode sNode=new SiblingNode(5);
-		createBSiblinginaryTree(sNode);
-		populateNextSiblingNode(sNode);
-		inOrderRecursive(sNode);
+		int [] input= {1,2,3,4,5};
+		Node root1=convertArrayToBST(input,0,input.length-1);
 		
+		
+		
+		
+
 	}
 
-	
+	private static Node convertArrayToBST(int[] input, int start, int end) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static Node convertBSTToCLL(Node root) {
+		// TODO Auto-generated method stub
+		if (root==null) {
+			return null;
+		}
+		
+		Node leftCircularList=convertBSTToCLL(root.getLeft());
+		Node rightCircularList=convertBSTToCLL(root.getRight());
+		
+		//making root as circular list
+		root.setRight(root);
+		root.setLeft(root);
+		
+		Node head=concatenateCLL(leftCircularList,root);
+		head=concatenateCLL(head,rightCircularList);
+		return head;
+	}
+
+	private static Node concatenateCLL(Node leftCircularList, Node rightCircularList) {
+		// TODO Auto-generated method stub
+		
+		if (leftCircularList==null) {
+			return rightCircularList;
+		}
+		if (rightCircularList==null) {
+			return leftCircularList;
+		}
+		
+		
+		Node leftLast=leftCircularList.getLeft();
+		Node rightLast=rightCircularList.getLeft();
+		
+		leftLast.setRight(rightCircularList);
+		rightCircularList.setLeft(leftLast);
+		
+		leftCircularList.setLeft(rightLast);
+		rightLast.setRight(leftCircularList);
+		
+		return leftCircularList;
+	}
+
+	private static Node convertBSTToDLLWithoutGlobalVariarble(Node root, Node head) {
+		// reverse inorderrecursive RDL
+		if (root == null) {
+			return head;
+		}
+		head=convertBSTToDLLWithoutGlobalVariarble(root.getRight(), head);
+		head=processNodeforConversionv2(root, head);
+		head=convertBSTToDLLWithoutGlobalVariarble(root.getLeft(), head);
+		return head;
+
+	}
+
+	private static Node processNodeforConversionv2(Node root, Node head) {
+		// TODO Auto-generated method stub
+		root.setRight(head);
+
+		if (head != null) {
+			head.setLeft(root);
+		}
+
+		head = root;
+		return head;
+
+	}
+
+	private static Node convertBSTToDLL(Node root, Node head) {
+		// Same as inorder recursive excudingProcess
+		if (root == null) {
+			return head;
+		}
+		head=convertBSTToDLL(root.getLeft(),head);
+		head=processNodeforConversion(root, head);
+		head=convertBSTToDLL(root.getRight(),head);
+
+		return head;
+	}
+
+	private static Node processNodeforConversion(Node root, Node head) {
+		// TODO Auto-generated method stub
+
+		if (convertBSTToDLL_prev == null) {
+			head = root;
+		} else {
+			convertBSTToDLL_prev.setRight(root);
+			root.setLeft(convertBSTToDLL_prev);
+		}
+		convertBSTToDLL_prev=root;
+		return head;
+
+	}
+
+	private static boolean isBST(Node root) {
+		// TODO Auto-generated method stub
+		boolean isBST = isBSTUtil(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+		return isBST;
+	}
+
+	private static boolean isBSTUtil(Node root, int minValue, int maxValue) {
+		// TODO Auto-generated method stub
+		if (root == null) {
+			return true;
+		}
+
+		if (root.getData() < minValue || root.getData() > maxValue) {
+			return false;
+		}
+
+		return isBSTUtil(root.getLeft(), minValue, root.getData())
+				&& isBSTUtil(root.getRight(), root.getData(), maxValue);
+
+	}
+
+	private static void buildExpressionTree(String infix) {
+		// TODO Auto-generated method stub
+		// String infix="(A+B*C)/D";
+		String postFixData = com.stack.Runner.inFixToPostFix(infix).replaceAll(",", "");
+		StringBuffer postFix = new StringBuffer(postFixData);
+		Stack<NodeString> stack = new Stack<>();
+		NodeString root = null;
+		for (int i = 0; i < postFix.length(); i++) {
+
+			if (!isOperator(postFix.charAt(i))) {
+				NodeString operandNode = new NodeString();
+				operandNode.setData("" + postFix.charAt(i));
+				operandNode.setLeft(null);
+				operandNode.setRight(null);
+				stack.push(operandNode);
+			} else {
+				NodeString operand2 = stack.pop();
+				NodeString operand1 = stack.pop();
+				NodeString opertorNode = new NodeString();
+				opertorNode.setData("" + postFix.charAt(i));
+				opertorNode.setLeft(operand1);
+				opertorNode.setRight(operand2);
+				stack.push(opertorNode);
+				root = opertorNode;
+
+			}
+
+		}
+
+		System.out.println(root.getData());
+
+	}
+
+	private static boolean isOperator(Character c) {
+		// TODO Auto-generated method stub
+
+		String operators = "*" + "/" + "+" + "-";
+		if (operators.indexOf(c) != -1) {
+			return true;
+		}
+		return false;
+	}
+
 	private static void createBSiblinginaryTree(SiblingNode siblingNode) {
 		// TODO Auto-generated method stub
 		addSiblingNode(siblingNode, 3);
@@ -66,201 +236,199 @@ public class Runner {
 		}
 
 	}
-	
+
 	private static void populateNextSiblingNode(SiblingNode root) {
 		// TODO Auto-generated method stub
-		if (root==null) {
-			return ;
+		if (root == null) {
+			return;
 		}
-		
-		Queue<SiblingNode> currentLevel=new LinkedList<>();
-		Queue<SiblingNode> nextLevel=new LinkedList<>();
+
+		Queue<SiblingNode> currentLevel = new LinkedList<>();
+		Queue<SiblingNode> nextLevel = new LinkedList<>();
 		currentLevel.add(root);
-		
+
 		while (!currentLevel.isEmpty()) {
-			
-			SiblingNode current=currentLevel.poll();
-			if (current.getLeft()!=null) {
+
+			SiblingNode current = currentLevel.poll();
+			if (current.getLeft() != null) {
 				nextLevel.add(current.getLeft());
 			}
-			if (current.getRight()!=null) {
+			if (current.getRight() != null) {
 				nextLevel.add(current.getRight());
 			}
 			current.setNextSibling(currentLevel.peek());
-			
-			if (currentLevel.isEmpty()) {
-				Queue<SiblingNode> temp=currentLevel;
-				currentLevel=nextLevel;
-				nextLevel=temp;
-			}
-			
-		}
-			
-		
-	}
 
+			if (currentLevel.isEmpty()) {
+				Queue<SiblingNode> temp = currentLevel;
+				currentLevel = nextLevel;
+				nextLevel = temp;
+			}
+
+		}
+
+	}
 
 	private static Node generateTree(char[] nodes) {
 		/*
 		 * Additional condition.Each node has either 2 child or no child
-		 * */
-		//0 represents internal node,1 represents leaf
-		//Node newNode;
-		if (nodes==null) {
+		 */
+		// 0 represents internal node,1 represents leaf
+		// Node newNode;
+		if (nodes == null) {
 			return null;
 		}
-		if (generateTree_unprocessedArray==nodes.length) {
-			Node leafNode=new Node();
+		if (generateTree_unprocessedArray == nodes.length) {
+			Node leafNode = new Node();
 			leafNode.setData(1);
 			return leafNode;
 		}
-		
-		if (nodes[generateTree_unprocessedArray]=='L') {
-			Node leafNode=new Node();
+
+		if (nodes[generateTree_unprocessedArray] == 'L') {
+			Node leafNode = new Node();
 			leafNode.setData(1);
 			return leafNode;
-		}else {
-			Node internalNode=new Node();
+		} else {
+			Node internalNode = new Node();
 			internalNode.setData(0);
 			generateTree_unprocessedArray++;
 			internalNode.setLeft(generateTree(nodes));
 			generateTree_unprocessedArray++;
 			internalNode.setRight(generateTree(nodes));
 			return internalNode;
-			
-		}
-	
-	}
 
+		}
+
+	}
 
 	private static ArrayList<Node> genearteAllTreesPossible(ArrayList<Node> listONodes) {
-		//TO DO	after BST
-		
+		// TO DO after BST
+
 		return null;
-		
+
 	}
 
-
 	private static void verticalSum(Node root) {
-		HashMap<Integer, Integer> map=new HashMap<>();
-		int currentColumnIndex=0;
-		verticalSumUtility(root,map,currentColumnIndex);
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int currentColumnIndex = 0;
+		verticalSumUtility(root, map, currentColumnIndex);
 		System.out.println(map);
 	}
 
-
 	private static void verticalSumUtility(Node root, HashMap<Integer, Integer> map, Integer currentColumnIndex) {
 		// TODO Auto-generated method stub
-		
-		if (root==null) {
-			return ;
+
+		if (root == null) {
+			return;
 		}
-		int currentNodeData=root.getData();
+		int currentNodeData = root.getData();
 		if (map.containsKey(currentColumnIndex)) {
-			map.put(currentColumnIndex,(map.get(currentColumnIndex))+currentNodeData);
-		}else {
+			map.put(currentColumnIndex, (map.get(currentColumnIndex)) + currentNodeData);
+		} else {
 			map.put(currentColumnIndex, currentNodeData);
 		}
-		verticalSumUtility(root.getLeft(), map, currentColumnIndex-1);
-		verticalSumUtility(root.getRight(), map, currentColumnIndex+1);
-		
-		
+		verticalSumUtility(root.getLeft(), map, currentColumnIndex - 1);
+		verticalSumUtility(root.getRight(), map, currentColumnIndex + 1);
+
 	}
 
-
-
-
-
-
 	private static void zigzagTreeTraversal(Node root) {
-		
-		Stack<Node> currentLevel=new Stack<>();
-		Stack<Node> nextLevel=new Stack<>();
+
+		Stack<Node> currentLevel = new Stack<>();
+		Stack<Node> nextLevel = new Stack<>();
 		currentLevel.push(root);
-		boolean toggle=false;//leftToWrite
-		
+		boolean toggle = false;// leftToWrite
+
 		while (!currentLevel.isEmpty()) {
-			Node current=currentLevel.pop();
+			Node current = currentLevel.pop();
 			processNode(current);
 			if (toggle) {
-				
-				if (current.getLeft()!=null) {
+
+				if (current.getLeft() != null) {
 					nextLevel.push(current.getLeft());
 				}
-				
-				if (current.getRight()!=null) {
+
+				if (current.getRight() != null) {
 					nextLevel.push(current.getRight());
 				}
 
 			} else {
-				
-				if (current.getRight()!=null) {
+
+				if (current.getRight() != null) {
 					nextLevel.push(current.getRight());
 				}
-				if (current.getLeft()!=null) {
+				if (current.getLeft() != null) {
 					nextLevel.push(current.getLeft());
 				}
 			}
-			
+
 			if (currentLevel.isEmpty()) {
-				Stack<Node> emptyStack=currentLevel;
-				currentLevel=nextLevel;
-				nextLevel=emptyStack;
-				toggle=!toggle;
+				Stack<Node> emptyStack = currentLevel;
+				currentLevel = nextLevel;
+				nextLevel = emptyStack;
+				toggle = !toggle;
 			}
-			
+
 		}
-		
+
 	}
 
-	private static Node findLeastCommonAncestor(Node root, int data1, int data2) {
-		//<TO DO>
-		Node lca=null;
-		
-		if (root.getData()==data1 ) {
-			
-		}else if (root.getLeft()!=null) {
-			
+	private static Node findLeastCommonAncestorBST(Node root, int data1, int data2) {
+		// <TO DO>
+		// assuming data1 and data2 are present
+		// data1<node<data2
+		if (data1 > data2) {
+			int temp = data1;
+			data1 = data2;
+			data2 = temp;
 		}
-		
-		return null;
+
+		Node lca = null;
+
+		if (root.getData() == null) {
+			return null;
+		} else if (root.getData() == data1 || root.getData() == data2) {
+			return root;
+		} else if (root.getData() < data1) {
+			return findLeastCommonAncestorBST(root.getRight(), data1, data2);
+		} else if (root.getData() > data2) {
+			return findLeastCommonAncestorBST(root.getLeft(), data1, data2);
+		}
+
+		return root;
 	}
 
 	private static ArrayList<Integer> getAncestors(Node root, int data) {
 		// TODO Auto-generated method stub
-		
-		ArrayList<Integer> listOfAncestors=null;
-		
-		
-		if (root==null) {
+
+		ArrayList<Integer> listOfAncestors = null;
+
+		if (root == null) {
 			return null;
 		}
-		
-		
-		if (root.getData()==data)
-		{
-			listOfAncestors=new ArrayList<Integer>();
+
+		if (root.getData() == data) {
+			listOfAncestors = new ArrayList<Integer>();
 			listOfAncestors.add(root.getData());
 			return listOfAncestors;
-		}else if ( (listOfAncestors=getAncestors(root.getLeft(), data) )!=null) {
+		} else if ((listOfAncestors = getAncestors(root.getLeft(), data)) != null) {
 			listOfAncestors.add(root.getData());
 			return listOfAncestors;
-		}else if((listOfAncestors=getAncestors(root.getRight(), data))!=null) {
+		} else if ((listOfAncestors = getAncestors(root.getRight(), data)) != null) {
 			listOfAncestors.add(root.getData());
 			return listOfAncestors;
 		}
-			return listOfAncestors;
-			
+		return listOfAncestors;
+
 	}
 
 	private static boolean printAncestors(Node root, int data) {
 		// TODO Auto-generated method stub
-		
-		if (root==null) {
+
+		if (root == null) {
 			return false;
 		}
-		
-		if (root.getData()==data || printAncestors(root.getLeft(), data) || printAncestors(root.getRight(), data)) {
+
+		if (root.getData() == data || printAncestors(root.getLeft(), data) || printAncestors(root.getRight(), data)) {
 			System.out.print(root.getData());
 			return true;
 		}
@@ -269,186 +437,184 @@ public class Runner {
 
 	private static Node constructTreeUsingInorderPreOrder(int[] inorder, int[] preOder) {
 		// TODO Auto-generated method stub
-		
-		//TO DO check if inOrder and pre/postorder is invalid
-		
-		int preStart=0;
-		int preEnd=preOder.length-1;
-		int inStart=0;
-		int inEnd=inorder.length-1;
-		Node root=null;
-		if (inorder.length==0) {
-			root=null;
-		} else if (inorder.length==1) {
-			root= new Node(inorder[0], null, null);
-		}else {
-			root=constructTreeUsingInorderPreOrderUtility(inorder,inStart,inEnd,preOder,preStart,preEnd);
+
+		// TO DO check if inOrder and pre/postorder is invalid
+
+		int preStart = 0;
+		int preEnd = preOder.length - 1;
+		int inStart = 0;
+		int inEnd = inorder.length - 1;
+		Node root = null;
+		if (inorder.length == 0) {
+			root = null;
+		} else if (inorder.length == 1) {
+			root = new Node(inorder[0], null, null);
+		} else {
+			root = constructTreeUsingInorderPreOrderUtility(inorder, inStart, inEnd, preOder, preStart, preEnd);
 		}
 		return root;
 	}
 
 	private static Node constructTreeUsingInorderPreOrderUtility(int[] inorder, int inStart, int inEnd, int[] preOder,
 			int preStart, int preEnd) {
-		
-		if (preStart>preEnd || inStart>inEnd) {
+
+		if (preStart > preEnd || inStart > inEnd) {
 			return null;
 		}
-		
-		//preOrder so 1st element is the root
-		Integer rootData=preOder[preStart];
-		Node current=new Node();
+
+		// preOrder so 1st element is the root
+		Integer rootData = preOder[preStart];
+		Node current = new Node();
 		current.setData(rootData);
-		//System.out.println(current);
-		//find index in inOrder
-		int indexOfRootInINORDER=0;
+		// System.out.println(current);
+		// find index in inOrder
+		int indexOfRootInINORDER = 0;
 		for (int i = inStart; i <= inEnd; i++) {
-			if (inorder[i]==rootData) {
-				indexOfRootInINORDER=i;
+			if (inorder[i] == rootData) {
+				indexOfRootInINORDER = i;
 				break;
 			}
 		}
-		
-		int leftSubCount=indexOfRootInINORDER-inStart;
-		int rightSubCount=inEnd-indexOfRootInINORDER;
-		
-		current.setLeft(constructTreeUsingInorderPreOrderUtility(inorder,inStart, indexOfRootInINORDER-1, preOder, preStart+1, preStart+leftSubCount));
-		//indexOfRootInINORDER-1-->since we want to eliminate the root,
-		//preStart+leftSubCount --> RootLEFTRight so 
-		
-		current.setRight(constructTreeUsingInorderPreOrderUtility(inorder, indexOfRootInINORDER+1, inEnd, preOder, preEnd-rightSubCount+1, preEnd));
-		//indexOfRootInINORDER+1 -->since we want to eliminate the root
-		//preEnd-rightSubCount+1 --> RootLEFTRight so
-		
+
+		int leftSubCount = indexOfRootInINORDER - inStart;
+		int rightSubCount = inEnd - indexOfRootInINORDER;
+
+		current.setLeft(constructTreeUsingInorderPreOrderUtility(inorder, inStart, indexOfRootInINORDER - 1, preOder,
+				preStart + 1, preStart + leftSubCount));
+		// indexOfRootInINORDER-1-->since we want to eliminate the root,
+		// preStart+leftSubCount --> RootLEFTRight so
+
+		current.setRight(constructTreeUsingInorderPreOrderUtility(inorder, indexOfRootInINORDER + 1, inEnd, preOder,
+				preEnd - rightSubCount + 1, preEnd));
+		// indexOfRootInINORDER+1 -->since we want to eliminate the root
+		// preEnd-rightSubCount+1 --> RootLEFTRight so
+
 		return current;
 	}
 
 	private static Node mirrorOfTree(Node root) {
 		// TODO Auto-generated method stub
-		//just like clone
-		if (root==null) {
+		// just like clone
+		if (root == null) {
 			return null;
 		}
-		
-		Node current=new Node();
+
+		Node current = new Node();
 		current.setData(root.getData());
 		current.setLeft(mirrorOfTree(root.getRight()));
 		current.setRight(mirrorOfTree(root.getLeft()));
-	
+
 		return current;
 	}
 
 	private static Boolean hasPathSum(Node root, int sum) {
 		// TODO Auto-generated method stub
-		if (root==null || sum<0) {
-			return false;//necessary since we will call || operator in recursion
+		if (root == null || sum < 0) {
+			return false;// necessary since we will call || operator in recursion
 		}
-		
-		if (sum==root.getData()) {
+
+		if (sum == root.getData()) {
 			return true;
-		}else {
-			return(hasPathSum(root.getLeft(), sum-root.getData())
-					|| hasPathSum(root.getRight(), sum-root.getData()));
+		} else {
+			return (hasPathSum(root.getLeft(), sum - root.getData())
+					|| hasPathSum(root.getRight(), sum - root.getData()));
 		}
-		
+
 	}
 
 	private static void rootToLeafPaths(Node root) {
-		
-		if (root==null) {
-			return ;
+
+		if (root == null) {
+			return;
 		}
-		Integer[] list=new Integer[20];
-		Integer length=0;//a.add(root);//important since you don't want to copy array again and again
-		printRootToLeafPaths(root,list,length);
+		Integer[] list = new Integer[20];
+		Integer length = 0;// a.add(root);//important since you don't want to copy array again and again
+		printRootToLeafPaths(root, list, length);
 	}
 
-	private static void printRootToLeafPaths(Node root, Integer[] list,int length) {
-		
-		list[length]=root.getData();
-		if (root.getLeft()==null && root.getRight()==null) {
-			printArrayTillLength(list,length);
+	private static void printRootToLeafPaths(Node root, Integer[] list, int length) {
+
+		list[length] = root.getData();
+		if (root.getLeft() == null && root.getRight() == null) {
+			printArrayTillLength(list, length);
 		}
-		
-		
-		if (root.getLeft()!=null) {
-			printRootToLeafPaths(root.getLeft(), list, length+1);
+
+		if (root.getLeft() != null) {
+			printRootToLeafPaths(root.getLeft(), list, length + 1);
 		}
-		if (root.getRight()!=null) {
-			printRootToLeafPaths(root.getRight(), list, length+1);
+		if (root.getRight() != null) {
+			printRootToLeafPaths(root.getRight(), list, length + 1);
 		}
 	}
 
 	private static void printArrayTillLength(Integer[] list, int length) {
-		
-				
+
 		for (int i = 0; i <= length; i++) {
 			System.out.print(list[i]);
 		}
 		System.out.println("");
-		
+
 	}
 
 	private static Integer widthOfTree(Node root) {
-		//no of max nodes in a level,level order traversal
-		if (root==null) {
+		// no of max nodes in a level,level order traversal
+		if (root == null) {
 			return 0;
 		}
-		Integer maxNodesInLevel=0;
-		Queue<Node> queue=new LinkedList<Node>();
+		Integer maxNodesInLevel = 0;
+		Queue<Node> queue = new LinkedList<Node>();
 		queue.add(root);
-		Integer numberOfNodesInLevel=0;
+		Integer numberOfNodesInLevel = 0;
 		while (!queue.isEmpty()) {
-			
-			numberOfNodesInLevel=queue.size();
-			if (numberOfNodesInLevel>maxNodesInLevel) {
-				maxNodesInLevel=numberOfNodesInLevel;
+
+			numberOfNodesInLevel = queue.size();
+			if (numberOfNodesInLevel > maxNodesInLevel) {
+				maxNodesInLevel = numberOfNodesInLevel;
 			}
-			
-			
-			while (numberOfNodesInLevel>0) {
-				Node current=queue.poll();
-				
-				if (current.getLeft()!=null) {
+
+			while (numberOfNodesInLevel > 0) {
+				Node current = queue.poll();
+
+				if (current.getLeft() != null) {
 					queue.add(current.getLeft());
 				}
-				if (current.getRight()!=null) {
+				if (current.getRight() != null) {
 					queue.add(current.getRight());
 				}
 				numberOfNodesInLevel--;
-			}	
+			}
 		}
-		
+
 		return maxNodesInLevel;
 	}
 
 	private static Integer diameterOfTree(Node root) {
-		
-		if (root==null) {
+
+		if (root == null) {
 			return 0;
 		}
-		//assuming diamter passes through root
-		Integer leftHeight=heightOfTreeRecursive(root.getLeft());
-		Integer rightHeight=heightOfTreeRecursive(root.getRight());
-		
-		//assuming root does not lie in diameter
-		Integer leftDiameter=diameterOfTree(root.getLeft());
-		Integer rightDiameter=diameterOfTree(root.getRight());
-		
-		Integer maxDiameter=Math.max(leftHeight+rightHeight+1, Math.max(leftDiameter,rightDiameter));
+		// assuming diamter passes through root
+		Integer leftHeight = heightOfTreeRecursive(root.getLeft());
+		Integer rightHeight = heightOfTreeRecursive(root.getRight());
+
+		// assuming root does not lie in diameter
+		Integer leftDiameter = diameterOfTree(root.getLeft());
+		Integer rightDiameter = diameterOfTree(root.getRight());
+
+		Integer maxDiameter = Math.max(leftHeight + rightHeight + 1, Math.max(leftDiameter, rightDiameter));
 		return maxDiameter;
 	}
 
 	private static Boolean structurallyIdentical(Node root1, Node root2) {
 		// TODO Auto-generated method stub
-		if (root1==null && root2==null) {
+		if (root1 == null && root2 == null) {
 			return true;
-		}else if ((root1== null && root2!=null) || (root1!=null && root2==null)) {
+		} else if ((root1 == null && root2 != null) || (root1 != null && root2 == null)) {
 			return false;
-		}else {
-			
-			return( (structurallyIdentical(root1.getLeft(), root2.getLeft()))
-				&& (structurallyIdentical(root1.getRight(), root2.getRight()))
-				);
+		} else {
+
+			return ((structurallyIdentical(root1.getLeft(), root2.getLeft()))
+					&& (structurallyIdentical(root1.getRight(), root2.getRight())));
 		}
 	}
 
@@ -464,7 +630,7 @@ public class Runner {
 			if (queue.isEmpty()) {// || (current.getLeft()==null && current.getRight()==null)) {
 				return noOfLeaves;
 			}
-			//noOfLeaves++;
+			// noOfLeaves++;
 			Integer numberOfnodesInLevel = queue.size();
 
 			while (numberOfnodesInLevel > 0) {
@@ -489,7 +655,7 @@ public class Runner {
 		if (root == null) {
 			return null;
 		}
-	
+
 		if (dataToBeDeleted < current.getData()) {
 			current.setLeft(deleteNodeInTreeRecursive(current.getLeft(), dataToBeDeleted));
 		} else if (dataToBeDeleted > current.getData()) {
@@ -519,11 +685,11 @@ public class Runner {
 
 	private static Integer findMinValueInTreee(Node root) {
 		// TODO Auto-generated method stub
-		
-		while (root.getLeft()!=null) {
-			root=root.getLeft();
+
+		while (root.getLeft() != null) {
+			root = root.getLeft();
 		}
-		
+
 		return root.getData();
 	}
 
@@ -794,18 +960,19 @@ public class Runner {
 	private static void processNode(Object root) {
 		// TODO Auto-generated method stub
 		if (root instanceof Node) {
-			System.out.print(	((Node)root).getData()	);
-				
+			System.out.print(((Node) root).getData());
+
 		}
-		
+
 		/*
-		 * nextSibling*/
+		 * nextSibling
+		 */
 		if (root instanceof SiblingNode) {
-			SiblingNode siblingNode=(SiblingNode) root;
-			if (siblingNode.getNextSibling()!=null) {
-				System.out.println(siblingNode.getData()+"has next sibling"+siblingNode.getNextSibling().getData());
+			SiblingNode siblingNode = (SiblingNode) root;
+			if (siblingNode.getNextSibling() != null) {
+				System.out.println(siblingNode.getData() + "has next sibling" + siblingNode.getNextSibling().getData());
 			}
-			
+
 		}
 	}
 
