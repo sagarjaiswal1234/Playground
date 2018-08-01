@@ -25,8 +25,7 @@ public class Runner {
 		createBinaryTree(root);
 		inOrderRecursive(root);
 		
-		
-
+	
 	}
 
 	
