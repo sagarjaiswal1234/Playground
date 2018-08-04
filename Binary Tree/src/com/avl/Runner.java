@@ -1,44 +1,133 @@
 package com.avl;
 
-
+import com.binarytree.*;
 
 public class Runner {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Node root;
-		root = createAVLTree();
-inOrderRecursive(root);
-		System.out.println(root.getData());
+		Node root = createAVLTree();
+		int lowerLimit;
+		int upperLimit;
+		Node root2=removeNodesOutOfRange(root, 12, 20);
+		
+		inOrderRecursive(root2);
+		
+		
 	}
 
+	private static Node removeNodesOutOfRange(Node root, int lowerLimit, int upperLimit) {
+		// TODO Auto-generated method stub
+		
+		if (root == null) {
+			return null;
+		}
+
+		if (root.getData() < lowerLimit) {
+			root.setLeft(null);
+			root=root.getRight();
+			root=removeNodesOutOfRange(root, lowerLimit, upperLimit);
+			
+		} else if (root.getData() > upperLimit) {
+			root.setRight(null);
+			root=root.getLeft();
+			root=removeNodesOutOfRange(root, lowerLimit, upperLimit);
+
+		} else {
+			// lowerlimit<=data<==upperlimit
+			Node left=removeNodesOutOfRange(root.getLeft(), lowerLimit, upperLimit);
+			Node right=removeNodesOutOfRange(root.getRight(), lowerLimit, upperLimit);
+			root.setLeft(left);
+			root.setRight(right);
+		}
+		
+		return root;
+	}
+
+	private static Node removeLeaves(Node root) {
+		// TODO Auto-generated method stub
+		if (root==null) {
+			return null;
+		}else if (root.getLeft()==null && root.getRight()==null) {
+			return null;
+		}else {
+			Node left=removeLeaves(root.getLeft());
+			Node right=removeLeaves(root.getRight());
+			root.setLeft(left);
+			root.setRight(right);
+			return root;
+		}
+	}
+
+	private static Node removeHalfNodes(Node root) {
+		// TODO Auto-generated method stub
+		if (root==null) {
+			return null;
+		}else if (root.getLeft()!=null && root.getRight()==null) {
+			return null;
+		} else if (root.getLeft()==null && root.getRight()!=null) {
+			return null;
+		}else {
+			Node left=removeHalfNodes(root.getLeft());
+			Node right=removeHalfNodes(root.getRight());
+			root.setLeft(left);
+			root.setRight(right);
+			return root;
+		}
 	
+	}
+
+	private static int countOfNodesInRange(Node root, int lowerLimit, int upperLimit) {
+
+		// PostOrder
+		if (root == null) {
+			return 0;
+		}
+
+		if (root.getData() < lowerLimit) {
+			return countOfNodesInRange(root.getRight(), lowerLimit, upperLimit);
+		} else if (root.getData() > upperLimit) {
+			return countOfNodesInRange(root.getLeft(), lowerLimit, upperLimit);
+		} else {
+			// lowerlimit<=data<==upperlimit
+
+			return (countOfNodesInRange(root.getLeft(), lowerLimit, upperLimit)
+					+ countOfNodesInRange(root.getRight(), lowerLimit, upperLimit) + 1);
+		}
+
+	}
+
+	private static boolean isAVL(Node root) {
+		// TODO Auto-generated method stub
+		if (root == null) {
+			return true;
+		}
+
+		return (isAVL(root.getLeft()) && isAVL(root.getRight())
+				&& (Math.abs(getMaxHeightLR(root.getLeft()) - getMaxHeightLR(root.getRight()))) <= 1);
+
+		// return false;
+	}
+
 	private static void inOrderRecursive(Node root) {
 		// TODO Auto-generated method stub
 		if (root == null) {
 			return;
 		}
 		inOrderRecursive(root.getLeft());
-		System.out.print(root.getData()+",");
+		System.out.print(root.getData() + ",");
 		inOrderRecursive(root.getRight());
 	}
 
-
-	
-	
-	
-	
 	private static Node createAVLTree() {
 
 		Node updatedRoot = new Node(1, null, null);
 		updatedRoot.setHeight(0);
 
-		
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			updatedRoot = insert(updatedRoot, i);
 		}
-		
 
 		System.out.println(updatedRoot.getData());
 
@@ -84,13 +173,18 @@ inOrderRecursive(root);
 
 		}
 
-		root.setHeight(getMaxHeightLR(root)+1);
-		
+		root.setHeight(getMaxHeightLR(root) + 1);
+
 		return root;
 	}
 
 	private static int getMaxHeightLR(Node root) {
 		// TODO Auto-generated method stub
+
+		if (root == null) {
+			return -1;
+		}
+
 		Node left = root.getLeft();
 		Node right = root.getRight();
 
@@ -103,7 +197,7 @@ inOrderRecursive(root);
 		} else {
 			return Math.max(left.getHeight(), right.getHeight());
 		}
-	
+
 	}
 
 	private static Node DoubleRotateRL(Node root) {

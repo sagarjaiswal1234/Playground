@@ -1021,7 +1021,7 @@ public class Runner {
 		}
 	}
 
-	private static void createBinaryTree(Node root) {
+	public static void createBinaryTree(Node root) {
 
 		addNode(root, 3);
 		addNode(root, 7);
