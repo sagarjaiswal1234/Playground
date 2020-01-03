@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Graph" />
+        <module name="StringMatching" />
+        <module name="GraphPOC" />
+        <module name="Binary Tree" />
+        <module name="Heap" />
+        <module name="CTCI" />
+        <module name="Stack" />
+        <module name="MyLinkedList" />
+        <module name="Sorting" />
+        <module name="referenced" />
+        <module name="Hashtable" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="8">
+      <module name="Binary Tree" target="1.5" />
+      <module name="CTCI" target="1.5" />
+      <module name="Graph" target="1.5" />
+      <module name="GraphPOC" target="1.5" />
+      <module name="Hashtable" target="1.5" />
+      <module name="Heap" target="1.5" />
+      <module name="MyLinkedList" target="1.5" />
+      <module name="referenced" target="1.5" />
+      <module name="Sorting" target="1.5" />
+      <module name="Stack" target="1.5" />
+      <module name="StringMatching" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

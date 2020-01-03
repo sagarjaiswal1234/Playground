@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/Binary Tree/pom.xml" />
+        <option value="$PROJECT_DIR$/CTCI/pom.xml" />
+        <option value="$PROJECT_DIR$/Graph/pom.xml" />
+        <option value="$PROJECT_DIR$/GraphPOC/pom.xml" />
+        <option value="$PROJECT_DIR$/Hashtable/pom.xml" />
+        <option value="$PROJECT_DIR$/Heap/pom.xml" />
+        <option value="$PROJECT_DIR$/Import/suffixtree-master/src/main/pom.xml" />
+        <option value="$PROJECT_DIR$/MyLinkedList/pom.xml" />
+        <option value="$PROJECT_DIR$/Sorting/pom.xml" />
+        <option value="$PROJECT_DIR$/Stack/pom.xml" />
+        <option value="$PROJECT_DIR$/StringMatching/pom.xml" />
+        <option value="$PROJECT_DIR$/Import/suffixtree-master/src/referencedDir/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

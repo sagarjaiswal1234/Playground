@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Binary Tree/Binary Tree.iml" filepath="$PROJECT_DIR$/Binary Tree/Binary Tree.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CTCI/CTCI.iml" filepath="$PROJECT_DIR$/CTCI/CTCI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Graph/Graph.iml" filepath="$PROJECT_DIR$/Graph/Graph.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GraphPOC/GraphPOC.iml" filepath="$PROJECT_DIR$/GraphPOC/GraphPOC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Hashtable/Hashtable.iml" filepath="$PROJECT_DIR$/Hashtable/Hashtable.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Heap/Heap.iml" filepath="$PROJECT_DIR$/Heap/Heap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyLinkedList/MyLinkedList.iml" filepath="$PROJECT_DIR$/MyLinkedList/MyLinkedList.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Sorting/Sorting.iml" filepath="$PROJECT_DIR$/Sorting/Sorting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Stack/Stack.iml" filepath="$PROJECT_DIR$/Stack/Stack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/StringMatching/StringMatching.iml" filepath="$PROJECT_DIR$/StringMatching/StringMatching.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Import/suffixtree-master/src/referencedDir/referenced.iml" filepath="$PROJECT_DIR$/Import/suffixtree-master/src/referencedDir/referenced.iml" />
+    </modules>
+  </component>
+</project>
